@@ -1,0 +1,14 @@
+server :
+  port    : 1000
+databaseMaster : 
+  address : "localhost"
+  db      : "db_mall_tangsel"
+  user    : "jemmycalak"
+  password: "jemmycalak"
+databaseSlave : 
+  address : "localhost"
+  db      : "db_quize"
+  user    : "jemmycalak"
+  password: "jemmycalak"
+redis :
+  address : "localhost:6437"
