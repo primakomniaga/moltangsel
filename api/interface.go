@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 
+	"github.com/jemmycalak/mall-tangsel/service/product"
 	"github.com/jemmycalak/mall-tangsel/service/user"
 )
 
@@ -12,4 +13,9 @@ type UserService interface {
 	GetUser(context.Context) user.User
 	Register(context.Context, *user.User) error
 	NewUser() *user.User
+}
+
+type ProductService interface {
+	NewProduct() *product.Product
+	CreateProduct(*product.Product) error
 }

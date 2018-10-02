@@ -6,13 +6,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jemmycalak/mall-tangsel/api"
+	"github.com/jemmycalak/mall-tangsel/api/http/product"
 	"github.com/jemmycalak/mall-tangsel/api/http/user"
 	u "github.com/jemmycalak/mall-tangsel/api/utils"
 )
 
 type Server struct {
-	server      *http.Server
-	UserService api.UserService
+	server         *http.Server
+	UserService    api.UserService
+	ProductService api.ProductService
 }
 
 func (s *Server) Serve(lis net.Listener) error {
@@ -20,6 +22,7 @@ func (s *Server) Serve(lis net.Listener) error {
 
 	// init all handler
 	user.Init(s.UserService)
+	product.Init(s.ProductService)
 
 	// import all route into server handler
 	s.server.Handler = Handler()
@@ -28,12 +31,21 @@ func (s *Server) Serve(lis net.Listener) error {
 }
 
 func Handler() *gin.Engine {
-	c := gin.Default()
-	v1 := c.Group("/api/v1/account")
-	{
-		v1.POST("/", user.Register)
-		v1.GET("/", user.GetUser)
 
+	c := gin.Default()
+	c.MaxMultipartMemory = 1 << 2
+	// if c.MaxMultipartMemory <= 1 {
+	// 	log.Println("max values")
+	// 	return nil
+	// }
+	v1 := c.Group("/api/v1")
+	{
+		//user
+		v1.POST("/account", user.Register)
+		v1.GET("/account", user.GetUser)
+
+		//product
+		v1.POST("/product", product.NewProduct2)
 	}
 	c.NoRoute(func(c *gin.Context) {
 		u.ResponseError(c, http.StatusBadGateway, "I dont know what are you looking for !")

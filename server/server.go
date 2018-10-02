@@ -6,9 +6,11 @@ import (
 	"net"
 
 	httpapi "github.com/jemmycalak/mall-tangsel/api/http"
+	resourceProduct "github.com/jemmycalak/mall-tangsel/resource/product"
 	resourceUser "github.com/jemmycalak/mall-tangsel/resource/user"
-	serviceUser "github.com/jemmycalak/mall-tangsel/service/user"
 
+	serviceProduct "github.com/jemmycalak/mall-tangsel/service/product"
+	serviceUser "github.com/jemmycalak/mall-tangsel/service/user"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 
@@ -45,6 +47,10 @@ func Mains() error {
 	resUser := resourceUser.New(masterDB, slaveDB)
 	serUser := serviceUser.New(resUser)
 
+	//product
+	resProduct := resourceProduct.New(masterDB, slaveDB)
+	serProduct := serviceProduct.New(resProduct)
+
 	// create a new Listener for http and grpc server
 	listener, err := net.Listen("tcp", ":8000")
 	if err != nil {
@@ -53,7 +59,8 @@ func Mains() error {
 	}
 
 	httpserver := httpapi.Server{
-		UserService: serUser,
+		UserService:    serUser,
+		ProductService: serProduct,
 	}
 
 	return httpserver.Serve(listener)
