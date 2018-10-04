@@ -45,7 +45,13 @@ func Handler() *gin.Engine {
 		v1.GET("/account", user.GetUser)
 
 		//product
-		v1.POST("/product", product.NewProduct2)
+		v1.POST("/product", product.NewProduct)
+		v1.GET("/product/:id", product.Product)
+		v1.GET("/products", product.Products)
+		v1.PUT("/product", product.EditProduct)
+		v1.DELETE("/product/:id", product.DeleteProduct)
+		v1.PUT("/product/image/:id", product.UpdateImage)
+		v1.GET("/products/limit", product.ProductLimit)
 	}
 	c.NoRoute(func(c *gin.Context) {
 		u.ResponseError(c, http.StatusBadGateway, "I dont know what are you looking for !")

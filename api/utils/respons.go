@@ -6,7 +6,7 @@ import (
 
 func ResponseError(c *gin.Context, code int, msg string) {
 	c.JSON(code, gin.H{
-		"status": "false",
+		"status": false,
 		"msg":    msg,
 		"code":   code,
 	})

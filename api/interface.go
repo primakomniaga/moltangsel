@@ -18,4 +18,10 @@ type UserService interface {
 type ProductService interface {
 	NewProduct() *product.Product
 	CreateProduct(*product.Product) error
+	Products() ([]product.Product, error)
+	Product(int) (*product.Product, error)
+	EditProduct(*product.Product) error
+	DeleteProduct(int) error
+	UpdateImage(int, []string) error
+	ProductLimit(int, int) ([]product.Product, error)
 }
