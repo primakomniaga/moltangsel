@@ -43,6 +43,23 @@ func Register(c *gin.Context) {
 	u.ResponseSuccess(c, code, payload)
 }
 
+func Login(c *gin.Context) {
+
+	token, err := u.GeneratorJWT(1)
+	if err != nil {
+		c.Abort()
+		u.ResponseError(c, http.StatusInternalServerError, "Something wrong, please try again")
+		return
+	}
+
+	payload := gin.H{
+		"status": "success",
+		"code":   http.StatusOK,
+		"token":  token,
+	}
+	u.ResponseSuccess(c, http.StatusOK, payload)
+}
+
 func GetUser(c *gin.Context) {
 	a := userService.GetUser(c)
 
