@@ -19,12 +19,14 @@ import (
 
 func Mains() error {
 
-	file, err := ioutil.ReadFile("config/DB.yaml")
+	file, err := ioutil.ReadFile("../config/DB.yaml")
 	if err != nil {
+		fmt.Println("Error 1", err)
 		return err
 	}
 
 	if err := yaml.Unmarshal(file, &Config); err != nil {
+		fmt.Println("Error 2")
 		return err
 	}
 
@@ -36,10 +38,12 @@ func Mains() error {
 
 	masterDB, err := sqlx.Connect("postgres", conM)
 	if err != nil {
+		fmt.Println("Error 3")
 		return err
 	}
 	slaveDB, err := sqlx.Connect("postgres", conS)
 	if err != nil {
+		fmt.Println("Error 4")
 		return err
 	}
 

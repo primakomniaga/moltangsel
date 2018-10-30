@@ -1,14 +1,13 @@
-server :
+server: 
   port    : 1000
-databaseMaster : 
+databseMaster:
   address : "localhost"
   db      : "db_mall_tangsel"
   user    : "jemmycalak"
   password: "jemmycalak"
-databaseSlave : 
+databaseSlave:
   address : "localhost"
-  db      : "db_mall_tangsel_backup"
   user    : "jemmycalak"
   password: "jemmycalak"
-redis :
+redis:
   address : "localhost:6437"
