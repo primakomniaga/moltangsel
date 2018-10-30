@@ -9,10 +9,12 @@ import (
 
 //interface connect to service
 type UserService interface {
-	IsUserActive(context.Context, int64) (bool, error)
-	GetUser(context.Context) user.User
+	IsUserActive(context.Context, int) (bool, error)
+	GetUser(int) (map[string]interface{}, error)
 	Register(context.Context, *user.User) error
 	NewUser() *user.User
+	Login(*user.Login) (*user.User, error)
+	ValidEmailPhone(*user.User) bool
 }
 
 type ProductService interface {

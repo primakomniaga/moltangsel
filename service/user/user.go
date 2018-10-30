@@ -5,8 +5,8 @@ import (
 )
 
 type User struct {
-	ID             int64     `json:"idUser"`
-	Name           string    `json:"name" bindinf:"required"`
+	ID             int       `json:"idUser"`
+	Name           string    `json:"name"`
 	Username       string    `json:"username"`
 	Email          string    `json:"email" binding:"required"`
 	Password       string    `json:"password" binding:"required"`
@@ -18,6 +18,13 @@ type User struct {
 	CreateAt       time.Time `json:"createAt"`
 	UpdateAt       time.Time `json:"updateAt"`
 	IsDelete       bool      `json:"isDelete"`
+	Level          int       `json:"level" binding:"required"`
+}
+
+type Login struct {
+	ID       int
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 func (s *Service) NewUser() *User {

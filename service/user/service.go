@@ -7,8 +7,10 @@ import (
 
 // interface for connect to Resource
 type Resource interface {
-	GetUser(int64) (User, error)
+	GetUser(int) (map[string]interface{}, error)
 	Register(*User) error
+	Login(*Login) (*User, error)
+	ValidEmailPhone(*User) bool
 }
 
 // Service of user
@@ -24,7 +26,7 @@ func New(userResource Resource) *Service {
 	return &s
 }
 
-func (s *Service) IsUserActive(ctx context.Context, userId int64) (bool, error) {
+func (s *Service) IsUserActive(ctx context.Context, userId int) (bool, error) {
 
 	fmt.Println("isUserActive <<<====")
 
@@ -38,10 +40,25 @@ func (s *Service) Register(ctx context.Context, model *User) error {
 	return nil
 }
 
-func (s *Service) GetUser(ctx context.Context) User {
-	u, err := s.resource.GetUser(1)
+func (s *Service) GetUser(userId int) (map[string]interface{}, error) {
+	u, err := s.resource.GetUser(userId)
 	if err != nil {
-		fmt.Println("error getuser ", err)
+		return nil, err
 	}
-	return u
+	return u, nil
+}
+
+func (s *Service) Login(m *Login) (*User, error) {
+	user, err := s.resource.Login(m)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func (s *Service) ValidEmailPhone(m *User) bool {
+	if s.resource.ValidEmailPhone(m) {
+		return true
+	}
+	return false
 }

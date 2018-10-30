@@ -7,7 +7,7 @@ databaseMaster :
   password: "jemmycalak"
 databaseSlave : 
   address : "localhost"
-  db      : "db_quize"
+  db      : "db_mall_tangsel_backup"
   user    : "jemmycalak"
   password: "jemmycalak"
 redis :

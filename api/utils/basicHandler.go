@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-
+	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -32,40 +32,49 @@ func ApikeyValidator() gin.HandlerFunc {
 	}
 }
 
+const (
+	barear_schema = "Bearer "
+)
+
 func TokenValidator() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.Request.Header.Get("Authorization")
+		fmt.Println(token)
 
-		if token == "" {
+		if token == "" || !strings.HasPrefix(token, barear_schema) {
 			c.Abort()
 			c.Error(errors.New("No auth Authorization"))
 			ResponseError(c, http.StatusBadRequest, "Authorization required")
 			return
 		}
-
-		if !ValidatorJWT(token, c) {
+		val, _ := ValidatorJWT(token, c)
+		if !val {
 			c.Abort()
 			c.Error(errors.New("Auht token is invalid"))
 			ResponseError(c, http.StatusBadRequest, "Auth token is invalid")
 			return
 		}
-		c.Set("Bearer", token)
+		splitToken := strings.Split(token, "Bearer ")
+		c.Set("Bearer", splitToken[1])
 		c.Next()
 	}
 }
 
-func ValidatorJWT(token string, c *gin.Context) bool {
-	nToken, err := jwt.ParseWithClaims(token, &JWTModel{}, func(nToken *jwt.Token) (interface{}, error) {
+func ValidatorJWT(token string, c *gin.Context) (bool, int) {
+
+	splitToken := strings.Split(token, "Bearer ")
+
+	nToken, err := jwt.ParseWithClaims(splitToken[1], &JWTModel{}, func(nToken *jwt.Token) (interface{}, error) {
 		return []byte(tokenPetter), nil
 	})
 	if err != nil {
-		return false
+		return false, 0
 	}
 	if claims, ok := nToken.Claims.(*JWTModel); ok && nToken.Valid {
 		c.Set("userid", claims.UserId)
-		return true
+		return true, claims.UserId
 	}
-	return false
+	return false, 0
 }
 
 func GeneratorJWT(userId int) (string, error) {
@@ -83,6 +92,6 @@ func GeneratorJWT(userId int) (string, error) {
 		fmt.Println("error generet jwt ", err)
 		return "", err
 	}
-	return signingString, nil
+	return "Bearer " + signingString, nil
 
 }
