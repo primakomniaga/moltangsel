@@ -8,7 +8,7 @@ import (
 
 func main() {
 	if err := server.Mains(); err != nil {
-		log.Fatalln("app does'nt running !!")
+		log.Fatalln("app does'nt running !!", err)
 		return
 	}
 	log.Println("App was running !")
